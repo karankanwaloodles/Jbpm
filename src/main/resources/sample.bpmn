@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<definitions id="Definition"
+             targetNamespace="http://www.jboss.org/drools"
+             typeLanguage="http://www.java.com/javaTypes"
+             expressionLanguage="http://www.mvel.org/2.0"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
+             xmlns:g="http://www.jboss.org/drools/flow/gpd"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:tns="http://www.jboss.org/drools">
+
+  <itemDefinition id="_income" structureRef="Integer" />
+
+  <process processType="Private" isExecutable="true" id="com.sample.bpmn.hello" name="Hello World" >
+
+    <extensionElements>
+     <tns:import name="com.sample.Passenger" />
+     <tns:global identifier="income" type="java.lang.Integer" />
+    </extensionElements>
+    <!-- process variables -->
+    <property id="income" itemSubjectRef="null"/>
+
+    <!-- nodes -->
+    <startEvent id="_1"  isInterrupting="true"/>
+    <exclusiveGateway id="ExclusiveGateway_1" name="IdentityTest" gatewayDirection="Diverging" />
+    <scriptTask id="ScriptTask_1" name="Car" >
+      <script>System.out.println("In Car Journey");</script>
+    </scriptTask>
+    <scriptTask id="ScriptTask_2" name="Bike" >
+      <script>System.out.println("in the bike journey");</script>
+    </scriptTask>
+    <inclusiveGateway id="InclusiveGateway_1" name="Inclusive Gateway 1" gatewayDirection="Converging" />
+    <endEvent id="EndEvent_1" name="End Event 1" >
+        <terminateEventDefinition />
+    </endEvent>
+    <scriptTask id="ScriptTask_3" name="firstStep" scriptFormat="http://www.java.com/java" >
+      <script>System.out.println("Hello this is the first Step");</script>
+    </scriptTask>
+
+    <!-- connections -->
+    <sequenceFlow id="ScriptTask_3-ExclusiveGateway_1" sourceRef="ScriptTask_3" targetRef="ExclusiveGateway_1" />
+    <sequenceFlow id="ExclusiveGateway_1-ScriptTask_1" sourceRef="ExclusiveGateway_1" targetRef="ScriptTask_1" name="can afford Car?" tns:priority="1" >
+      <conditionExpression xsi:type="tFormalExpression" language="http://www.java.com/java" >return (10&gt;1000)</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="ExclusiveGateway_1-ScriptTask_2" sourceRef="ExclusiveGateway_1" targetRef="ScriptTask_2" name="can afford Bike?" tns:priority="1" >
+      <conditionExpression xsi:type="tFormalExpression" language="http://www.java.com/java" >return (10 &lt;1000)</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="ScriptTask_1-InclusiveGateway_1" sourceRef="ScriptTask_1" targetRef="InclusiveGateway_1" />
+    <sequenceFlow id="ScriptTask_2-InclusiveGateway_1" sourceRef="ScriptTask_2" targetRef="InclusiveGateway_1" />
+    <sequenceFlow id="InclusiveGateway_1-EndEvent_1" sourceRef="InclusiveGateway_1" targetRef="EndEvent_1" />
+    <sequenceFlow id="_1-ScriptTask_3" sourceRef="_1" targetRef="ScriptTask_3" />
+
+  </process>
+
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="com.sample.bpmn.hello" >
+      <bpmndi:BPMNShape bpmnElement="_1" >
+        <dc:Bounds x="181" y="-6" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ExclusiveGateway_1" >
+        <dc:Bounds x="184" y="136" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ScriptTask_1" >
+        <dc:Bounds x="54" y="194" width="110" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ScriptTask_2" >
+        <dc:Bounds x="263" y="199" width="110" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="InclusiveGateway_1" >
+        <dc:Bounds x="182" y="276" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndEvent_1" >
+        <dc:Bounds x="184" y="369" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ScriptTask_3" >
+        <dc:Bounds x="335" y="35" width="110" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="ScriptTask_3-ExclusiveGateway_1" >
+        <di:waypoint x="390" y="60" />
+        <di:waypoint x="206" y="68" />
+        <di:waypoint x="206" y="124" />
+        <di:waypoint x="208" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="ExclusiveGateway_1-ScriptTask_1" >
+        <di:waypoint x="208" y="160" />
+        <di:waypoint x="115" y="149" />
+        <di:waypoint x="103" y="149" />
+        <di:waypoint x="106" y="173" />
+        <di:waypoint x="109" y="219" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="ExclusiveGateway_1-ScriptTask_2" >
+        <di:waypoint x="208" y="160" />
+        <di:waypoint x="305" y="149" />
+        <di:waypoint x="305" y="173" />
+        <di:waypoint x="318" y="224" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="ScriptTask_1-InclusiveGateway_1" >
+        <di:waypoint x="109" y="219" />
+        <di:waypoint x="106" y="247" />
+        <di:waypoint x="180" y="247" />
+        <di:waypoint x="206" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="ScriptTask_2-InclusiveGateway_1" >
+        <di:waypoint x="318" y="224" />
+        <di:waypoint x="305" y="247" />
+        <di:waypoint x="230" y="247" />
+        <di:waypoint x="206" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="InclusiveGateway_1-EndEvent_1" >
+        <di:waypoint x="206" y="300" />
+        <di:waypoint x="205" y="287" />
+        <di:waypoint x="205" y="303" />
+        <di:waypoint x="208" y="393" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_1-ScriptTask_3" >
+        <di:waypoint x="205" y="18" />
+        <di:waypoint x="205" y="51" />
+        <di:waypoint x="335" y="51" />
+        <di:waypoint x="390" y="60" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</definitions>
